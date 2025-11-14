@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jewellery Admin - Users</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+
+  <!-- Sidebar -->
+  <div class="bg-black text-white" id="sidebar-wrapper">
+    <div class="sidebar-heading p-3 gold-text fw-bold fs-4">Jewellery Admin</div>
+    <div class="list-group list-group-flush">
+       <a href="login.html" class="list-group-item list-group-item-action bg-black text-white" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a>
+      <a href="index.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
+      <a href="users.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-people-fill me-2"></i> Users</a>
+      <a href="products.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-gem me-2"></i> Products</a>
+      <a href="orders.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-bag-check-fill me-2"></i> Orders</a>
+      <a href="categories.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-tags-fill me-2"></i> Categories</a>
+      <a href="reports.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-bar-chart-fill me-2"></i> Reports</a>
+      <a href="settings.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-gear-fill me-2"></i> Settings</a>
+      <a href="messages.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-chat-dots-fill me-2"></i> Messages</a>
+      <a href="profile.html" class="list-group-item list-group-item-action bg-black text-white"><i class="bi bi-person-circle me-2"></i> Profile</a>
+    </div>
+  </div>
+
+
+  <div id="page-content-wrapper" class="w-100">
+
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-gold border-bottom">
+      <div class="container-fluid">
+        <button class="btn btn-gold" id="menu-toggle">☰</button>
+        <div class="ms-auto d-flex align-items-center">
+          <span class="fw-bold light-text me-2">SUHANI</span>
+          <img src="SONA.jpg" class="rounded-circle" alt="Admin">
+        </div>
+      </div>
+    </nav>
+
+     
+    <div class="container-fluid mt-4">
+      <h1 class="gold-text mb-4">Users</h1>
+
+      <div class="card shadow">
+        <div class="card-header bg-gold text-black fw-bold">
+          User List
+        </div>
+        <div class="card-body">
+          <table class="table table-hover" id="userTable">
+            <thead class="table-dark">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Registered</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Jane Doe</td>
+                <td>jane@example.com</td>
+                <td>Customer</td>
+                <td>01 Jan 2025</td>
+                <td>
+                  <button class="btn btn-sm btn-primary me-1 edit-btn"><i class="bi bi-pencil-fill"></i></button>
+                  <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash-fill"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>John Smith</td>
+                <td>john@example.com</td>
+                <td>Customer</td>
+                <td>05 Feb 2025</td>
+                <td>
+                  <button class="btn btn-sm btn-primary me-1 edit-btn"><i class="bi bi-pencil-fill"></i></button>
+                  <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash-fill"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+if (sessionStorage.getItem("isAdmin") !== "true") {
+  window.location.href = "login.html"; 
+}
+
+
+function logout() {
+  sessionStorage.removeItem("isAdmin");
+  window.location.href = "login.html";
+}
+
+
+document.querySelectorAll(".delete-btn").forEach(button => {
+  button.addEventListener("click", function() {
+    const row = this.closest("tr");
+    const userName = row.children[1].textContent;
+
+    if (confirm(`Are you sure you want to delete ${userName}?`)) {
+      row.remove();
+      updateNumbers();
+    }
+  });
+});
+
+
+document.querySelectorAll(".edit-btn").forEach(button => {
+  button.addEventListener("click", function() {
+    const row = this.closest("tr");
+    const nameCell = row.children[1];
+    const emailCell = row.children[2];
+    const roleCell = row.children[3];
+
+    if (this.classList.contains("editing")) {
+      
+      nameCell.textContent = nameCell.querySelector("input").value;
+      emailCell.textContent = emailCell.querySelector("input").value;
+      roleCell.textContent = roleCell.querySelector("input").value;
+      this.innerHTML = '<i class="bi bi-pencil-fill"></i>';
+      this.classList.remove("editing");
+    } else {
+      
+      const nameValue = nameCell.textContent;
+      const emailValue = emailCell.textContent;
+      const roleValue = roleCell.textContent;
+
+      nameCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${nameValue}">`;
+      emailCell.innerHTML = `<input type="email" class="form-control form-control-sm" value="${emailValue}">`;
+      roleCell.innerHTML = `<input type="text" class="form-control form-control-sm" value="${roleValue}">`;
+      this.innerHTML = '<i class="bi bi-check-lg"></i>';
+      this.classList.add("editing");
+    }
+  });
+});
+
+
+function updateNumbers() {
+  const rows = document.querySelectorAll("#userTable tbody tr");
+  rows.forEach((row, index) => {
+    row.children[0].textContent = index + 1;
+  });
+}
+</script>
+
+</body>
+</html>
